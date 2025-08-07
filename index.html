@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mc1.20.1-VIPandReport - Minecraft插件</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2E7D32',
+                        secondary: '#4CAF50',
+                        accent: '#8BC34A',
+                        dark: '#1B5E20',
+                        light: '#E8F5E9',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234caf50' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans bg-pattern">
+    <!-- 导航栏 -->
+    <nav class="bg-primary shadow-md sticky top-0 z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-white text-2xl mr-3"></i>
+                    <span class="text-white font-bold text-xl">Mc1.20.1-VIPandReport</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#features" class="text-white hover:text-light px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">功能</a>
+                    <a href="#commands" class="text-white hover:text-light px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">命令</a>
+                    <a href="#installation" class="text-white hover:text-light px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">安装</a>
+                    <a href="#config" class="text-white hover:text-light px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">配置</a>
+                    <a href="#support" class="text-white hover:text-light px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">支持</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary">功能</a>
+                <a href="#commands" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary">命令</a>
+                <a href="#installation" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary">安装</a>
+                <a href="#config" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary">配置</a>
+                <a href="#support" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary">支持</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="bg-gradient-to-r from-secondary to-dark text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-shadow mb-4">VIP与举报管理插件</h1>
+                <p class="text-xl md:text-2xl max-w-3xl mx-auto text-light/90">为Minecraft 1.20.1 Paper服务端打造的轻量级管理工具，特别适合管理员较少的服务器</p>
+                <div class="mt-8">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent/20 text-accent mr-2">
+                        版本 2.21
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent/20 text-accent">
+                        支持 Paper 1.20.1
+                    </span>
+                </div>
+                <div class="mt-10">
+                    <a href="#installation" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-dark bg-accent hover:bg-accent/80 transition duration-150 ease-in-out">
+                        <i class="fa fa-download mr-2"></i> 开始使用
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 功能区域 -->
+    <section id="features" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-gray-900">核心功能</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">简单实用的功能设计，满足服务器管理基本需求</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- 举报系统 -->
+                <div class="bg-light rounded-lg shadow-md p-8 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-flag text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">举报系统</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>使用 <code class="bg-gray-100 px-1 rounded">/report &lt;玩家&gt; &lt;原因&gt;</code> 命令举报违规玩家</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>支持四种举报原因：作弊、辱骂、利用漏洞、消极游戏</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>不同违规原因对应不同封禁时长（30天至1小时不等）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>30秒举报冷却时间，防止滥用</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>无法举报管理员(OP)玩家，保护管理权限</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- VIP管理 -->
+                <div class="bg-light rounded-lg shadow-md p-8 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-star text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">VIP管理</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>管理员通过 <code class="bg-gray-100 px-1 rounded">/vip &lt;add/remove&gt; &lt;玩家&gt;</code> 管理VIP</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>添加VIP时需指定等级：<code class="bg-gray-100 px-1 rounded">/vip add &lt;玩家ID&gt; &lt;等级&gt;</code></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>VIP玩家举报处理优先级更高（5秒 vs 普通玩家5分钟）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>聊天和名称前缀显示特殊标识（如§e[VIP X]）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>管理员兼VIP玩家显示§c[Admin]§e[VIP X] 特殊标识</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 自动处理 -->
+                <div class="bg-light rounded-lg shadow-md p-8 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-cogs text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">自动处理机制</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>根据举报原因自动执行对应时长的封禁</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>全服广播违规处理结果，维护服务器秩序</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>自动检查插件更新（默认每5小时一次）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>基于计分板团队系统的玩家前缀自动管理</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 灵活配置 -->
+                <div class="bg-light rounded-lg shadow-md p-8 card-hover">
+                    <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa fa-sliders text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">灵活配置选项</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>可自定义各类违规行为的封禁时长</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>设置VIP最大举报次数和冷却时间</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>自定义消息模板，统一服务器通知风格</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-secondary mt-1 mr-2"></i>
+                            <span>调整更新检查频率，平衡性能与时效性</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 命令说明 -->
+    <section id="commands" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-gray-900">命令说明</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">简单直观的命令设计，易于使用和记忆</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="divide-y divide-gray-200">
+                    <!-- 举报命令 -->
+                    <div class="px-6 py-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">举报命令</h3>
+                                <p class="mt-1 max-w-2xl text-sm text-gray-500">玩家用于举报违规行为的命令</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="bg-gray-50 rounded-md p-4">
+                                <code class="text-primary font-medium">/report &lt;玩家&gt; &lt;原因&gt;</code>
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-sm font-semibold text-gray-700">参数说明：</h4>
+                                <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                                    <li class="flex items-start">
+                                        <span class="font-mono text-gray-500 mr-2">&lt;玩家&gt;</span>
+                                        <span>：被举报玩家的ID（必须在线）</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="font-mono text-gray-500 mr-2">&lt;原因&gt;</span>
+                                        <span>：举报原因（必须是以下之一：作弊、辱骂、利用漏洞、消极游戏）</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIP管理命令 -->
+                    <div class="px-6 py-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">VIP管理命令</h3>
+                                <p class="mt-1 max-w-2xl text-sm text-gray-500">管理员用于管理VIP玩家的命令（需要管理员权限）</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <div class="bg-gray-50 rounded-md p-4">
+                                    <code class="text-primary font-medium">/vip add &lt;玩家ID&gt; &lt;等级&gt;</code>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-600">添加指定玩家为VIP，并设置等级</p>
+                            </div>
+                            <div>
+                                <div class="bg-gray-50 rounded-md p-4">
+                                    <code class="text-primary font-medium">/vip remove &lt;玩家&gt;</code>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-600">移除指定玩家的VIP身份</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 安装说明 -->
+    <section id="installation" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-gray-900">安装步骤</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">简单几步，快速部署插件</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <ol class="space-y-8">
+                    <li class="flex">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-medium">1</div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">下载插件</h3>
+                            <p class="mt-1 text-gray-600">获取最新版本的Mc1.20.1-VIPandReport插件JAR文件</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-medium">2</div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">放置插件</h3>
+                            <p class="mt-1 text-gray-600">将下载的JAR文件放入您的Minecraft 1.20.1 Paper服务端的<code class="bg-gray-100 px-1 rounded">plugins</code>文件夹中</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-medium">3</div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">启动服务器</h3>
+                            <p class="mt-1 text-gray-600">启动或重启您的Paper服务器，插件将自动加载并生成默认配置文件</p>
+                        </div>
+                    </li>
+                    <li class="flex">
+                        <div class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-medium">4</div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">配置插件（可选）</h3>
+                            <p class="mt-1 text-gray-600">在<code class="bg-gray-100 px-1 rounded">plugins/VipReport/config.yml</code>中根据您的需求调整配置参数，然后使用<code class="bg-gray-100 px-1 rounded">/reload</code>命令重载配置</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- 配置说明 -->
+    <section id="config" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-gray-900">配置说明</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">通过配置文件自定义插件行为</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
+                <p class="text-gray-700 mb-6">配置文件位于 <code class="bg-gray-100 px-1 rounded">plugins/VipReport/config.yml</code>，以下是主要配置项说明：</p>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">封禁时长设置</h3>
+                        <div class="bg-gray-50 rounded-md p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+                            ban-duration:
+                              cheat: 2592000000  # 作弊 - 30天（毫秒）
+                              abuse: 86400000     # 辱骂 - 1天（毫秒）
+                              exploit: 604800000  # 利用漏洞 - 7天（毫秒）
+                              afk: 3600000        # 消极游戏 - 1小时（毫秒）
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">举报设置</h3>
+                        <div class="bg-gray-50 rounded-md p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+                            report:
+                              cooldown: 30        # 举报冷却时间（秒）
+                              vip-priority-time: 5  # VIP举报处理时间（秒）
+                              normal-priority-time: 300  # 普通玩家举报处理时间（秒）
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">更新检查</h3>
+                        <div class="bg-gray-50 rounded-md p-4 text-sm font-mono text-gray-800 overflow-x-auto">
+                            update-check:
+                              enabled: true       # 是否启用自动更新检查
+                              interval: 18000     # 检查间隔（秒），默认5小时
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 支持与反馈 -->
+    <section id="support" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-gray-900">支持与反馈</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500">有问题？请联系我们获取帮助</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-light rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-github text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">GitHub仓库</h3>
+                        <p class="text-gray-600 mb-4">查看源代码，提交issues或PR</p>
+                        <a href="https://github.com/billbilW/Mc1.20.1-VIPandReport/tree/main" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-dark transition duration-150 ease-in-out">
+                            访问仓库 <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+
+                    <div class="bg-light rounded-lg p-6 shadow-md text-center">
+                        <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-user text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">作者联系</h3>
+                        <p class="text-gray-600 mb-4">通过B站空间联系插件作者</p>
+                        <a href="https://space.bilibili.com/677987717" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-dark transition duration-150 ease-in-out">
+                            B站空间 <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex justify-center md:justify-start">
+                    <i class="fa fa-shield text-accent text-3xl mr-3"></i>
+                    <span class="text-xl font-bold">Mc1.20.1-VIPandReport</span>
+                </div>
+                <div class="mt-8 md:mt-0">
+                    <p class="text-center md:text-right text-gray-300">
+                        &copy; 2023 Mc1.20.1-VIPandReport 插件. 保留所有权利.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-dark');
+                navbar.classList.remove('bg-primary');
+            } else {
+                navbar.classList.add('bg-primary');
+                navbar.classList.remove('bg-dark');
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                document.getElementById('mobile-menu').classList.add('hidden');
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('opacity-100');
+            document.body.classList.remove('opacity-0');
+        });
+    </script>
+</body>
+</html>
